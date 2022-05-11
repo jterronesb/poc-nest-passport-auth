@@ -26,6 +26,10 @@ export class UsersService {
   //     return this.users.find(user => user.username === username);
   // }
 
+  async findAll() {
+    return await this.userModel.find({});
+  }
+
   async findOne(username: string): Promise<IUser> {
     return await this.userModel.findOne({ username });
   }
@@ -48,5 +52,10 @@ export class UsersService {
 
   private hasPassword(password, salt): Promise<string> {
     return bcrypt.hash(password, salt);
+  }
+
+  async getRolesByUser(id: string) {
+    const user = await this.userModel.findById(id);
+    return user;
   }
 }
