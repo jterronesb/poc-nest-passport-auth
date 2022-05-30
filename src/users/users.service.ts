@@ -30,22 +30,22 @@ export class UsersService {
     return await this.userModel.find({});
   }
 
-  async findOne(username: string): Promise<IUser> {
-    return await this.userModel.findOne({ username });
+  async findOne(email: string): Promise<IUser> {
+    return await this.userModel.findOne({ email });
   }
 
   async create(createUserDto: CreateUserDto): Promise<IUser> {
-    const { username, password } = createUserDto;
+    const { email, password } = createUserDto;
     const salt = await bcrypt.genSalt();
 
-    const userExists = await this.findOne(username);
+    const userExists = await this.findOne(email);
     if (userExists) {
       throw new ConflictException('username already exists');
     }
 
     const user = new this.userModel(createUserDto);
 
-    user.username = username;
+    user.email = email;
     user.password = await this.hasPassword(password, salt);
     return await user.save();
   }
@@ -56,6 +56,6 @@ export class UsersService {
 
   async getRolesByUser(id: string) {
     const user = await this.userModel.findById(id);
-    return user;
+    return user.roles;
   }
 }

@@ -9,18 +9,17 @@ import { UsersService } from './users.service';
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
+  constructor(private readonly userService: UsersService) {}
 
-    constructor(private readonly userService: UsersService){}
+  @Post()
+  @Roles(Role.ADMIN)
+  async create(@Body() createUserDto: CreateUserDto): Promise<IUser> {
+    return await this.userService.create(createUserDto);
+  }
 
-    @Post()
-    @Roles(Role.ADMIN)
-    async create(@Body() createUserDto: CreateUserDto): Promise<IUser> {
-        return await this.userService.create(createUserDto)
-    }
-
-    @Get()
-    @Roles(Role.ADMIN)
-    findAll(){
-        return this.userService.findAll();
-    }
+  @Get()
+  @Roles(Role.ADMIN)
+  findAll() {
+    return this.userService.findAll();
+  }
 }
